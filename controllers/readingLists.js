@@ -31,8 +31,19 @@ router.post('/', async (req, res, next) => {
   try {
     const { blogId, userId } = req.body
 
-    if (!blogId) {
+    if (!blogId || !userId) {
       return res.status(400).json({ error: 'both blogId and userId are required' })
+    }
+
+    const existingEntry = await ReadingList.findOne({
+      where: {
+        blog_id: blogId,
+        user_id: userId
+      }
+    })
+
+    if (existingEntry) {
+      return res.status(400).json({ error: 'blog is already in reading list' })
     }
 
     const blog = await Blog.findByPk(blogId)

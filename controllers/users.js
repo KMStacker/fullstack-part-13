@@ -25,7 +25,6 @@ router.get('/:id', async (req, res, next) => {
         attributes: { exclude: ['userId', 'createdAt', 'updatedAt'] },
         through: {
           attributes: ['read', 'id'],
-          where
         }
       }
     })
@@ -34,7 +33,15 @@ router.get('/:id', async (req, res, next) => {
       return res.status(404).end()
     }
 
-    return res.json(user)
+    const userJson = user.toJSON()
+    if (req.query.read) {
+      const readStatus = req.query.read === 'true'
+      userJson.readings = userJson.readings.filter(
+        blog => blog.reading_list.read === readStatus
+      )
+    }
+
+    return res.json(userJson)
   } catch (error) {
     next(error)
   }
