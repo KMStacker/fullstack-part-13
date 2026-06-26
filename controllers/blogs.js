@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { Blog, User } = require('../models')
+const { Blog, User, Session } = require('../models')
 const jwt = require('jsonwebtoken')
 const { SECRET } = require('../util/config')
 const { Op } = require('sequelize')
@@ -12,12 +12,22 @@ const blogFinder = async (req, res, next) => {
   next()
 }
 
-const tokenExtractor = (req, res, next) => {
+const tokenExtractor = async (req, res, next) => {
   const authorization = req.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     try {
       req.decodedToken = jwt.verify(authorization.substring(7), SECRET)
-    } catch {
+
+      const session = await Session.findOne({
+        where: { token: authorization.substring(7) },
+        include: { model: User }
+      })
+      
+      if (!session || session.user.disabled) {
+        return res.status(401).json({ error: 'session invalid or user disabled' })
+      }
+
+    } catch (error) {
       return res.status(401).json({ error: 'token invalid' })
     }
   } else {

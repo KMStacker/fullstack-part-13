@@ -10,6 +10,7 @@ const loginRouter = require('./controllers/login')
 const authorsRouter = require('./controllers/authors')
 const resetDatabaseRouter = require('./controllers/resetDatabase')
 const readingListsRouter = require('./controllers/readingLists')
+const logoutRouter = require('./controllers/logout')
 
 const { errorHandler } = require('./util/middleware')
 
@@ -25,6 +26,7 @@ app.use('/api/login', loginRouter)
 app.use('/api/authors', authorsRouter)
 app.use('/api/reset', resetDatabaseRouter)
 app.use('/api/readinglists', readingListsRouter)
+app.use('/api/logout', logoutRouter)
 
 app.use(errorHandler)
 
