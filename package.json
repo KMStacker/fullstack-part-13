@@ -4,9 +4,10 @@
   "description": "",
   "main": "cli.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "cross-env TESTING=true node --test --test-concurrency=1 tests/api_ch3.test.js",
+    "start:test": "cross-env TESTING=true node index.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,8 @@
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
+    "axios": "^1.18.1",
+    "cross-env": "^10.1.0",
     "nodemon": "^3.1.14"
   }
 }
