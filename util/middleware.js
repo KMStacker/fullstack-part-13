@@ -4,6 +4,9 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'SequelizeValidationError') {
     return response.status(400).json({ error: error.errors.map(e => e.message) })
   }
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return response.status(400).json({ error: error.errors.map(e => e.message) })
+  }
 
   return response.status(500).json({ error: 'something went wrong' })
 }
